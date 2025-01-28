@@ -4,9 +4,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module rx(
-    input        clk,
-    input        din,
-    output       data_valid,
+    input              clk,
+    input              din,
+    output             data_valid,
     output logic [7:0] data
 );
 
@@ -33,15 +33,20 @@ module rx(
             SAMPLE: begin
                 baud_rate_cnt <= baud_rate_cnt + 1;
                 if (baud_rate_cnt == 4'b1111) begin
+                    bit_cnt <= bit_cnt + 1;
                     data_sr <= {data_sr[6:0], din};
                     if (bit_cnt == 4'd8) begin
-                        valid <= 1;
                         data  <= data_sr;
-                        state <= IDLE;
                     end
+                end else if (bit_cnt == 4'd9 && baud_rate_cnt == 4'b0111) begin
+                    valid <= 1;
+                    state <= IDLE;
                 end
             end
-            default: state <= IDLE;
+            default: begin
+                data  <= 0;
+                state <= IDLE;
+            end
         endcase
     end
     
