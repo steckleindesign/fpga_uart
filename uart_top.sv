@@ -3,8 +3,9 @@
 
 //////////////////////////////////////////////////////////////////////////////////
 
-module uart_top(
+module uart_top (
     input  clk,
+    input  btn,
     input  rx_line,
     output tx_line
 );
@@ -12,6 +13,10 @@ module uart_top(
     logic transfer;
     logic rx_data_valid;
     logic [7:0] rx_data, tx_data;
+    
+    debouncer db (.clk(clk),
+                  .bouncy_signal(btn),
+                  .clean_signal(transfer));
 
     rx rx_inst (.clk(clk),
                 .din(rx_line),
