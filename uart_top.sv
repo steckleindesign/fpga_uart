@@ -27,5 +27,10 @@ module uart_top (
                 .send(transfer),
                 .dout(tx_line),
                 .data(tx_data));
+    
+    reg_block device_reg (.clk(clk),
+                          .wr_req(rx_data_valid),
+                          .din(rx_data),
+                          .dout(tx_data));
 
 endmodule

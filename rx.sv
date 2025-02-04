@@ -15,18 +15,18 @@ module rx(
     logic [7:0] data_sr;
     logic       valid;
 
-    typedef enum logic {
-        IDLE, SAMPLE
+    typedef enum logic [1:0] {
+        IDLE, SAMPLE, PROCESS
     } state_t;
     state_t state;
     
     always_ff @(posedge clk) begin
         case(state)
             IDLE: begin
+                valid <= 0;
                 baud_rate_cnt <= 4'b1000;
                 bit_cnt       <=  'b0;
                 if (~din) begin
-                    valid <= 0;
                     state <= SAMPLE;
                 end
             end
@@ -40,10 +40,14 @@ module rx(
                     end
                 end else if (bit_cnt == 4'd9 && baud_rate_cnt == 4'b0111) begin
                     valid <= 1;
-                    state <= IDLE;
+                    state <= PROCESS;
                 end
             end
+            PROCESS: begin
+                state <= IDLE;
+            end
             default: begin
+                valid <= 0;
                 data  <= 0;
                 state <= IDLE;
             end
