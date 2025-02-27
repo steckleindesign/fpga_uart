@@ -7,34 +7,33 @@
 module debouncer (
     input        clk,
     input        bouncy_signal,
-    output logic clean_signal
+    output       clean_signal
 );
+
+    logic        clean_pulse;
+    logic        signal_lvl;
+    logic [10:0] hold_cnt;
 
     typedef enum logic [0:0] {
         LISTEN, HOLD
     } state_t;
     state_t state;
     
-    logic signal_lvl;
-    
-    logic [15:0] hold_cnt;
-    
     always_ff @(posedge clk) begin
-        clean_signal <= 0;
+        clean_pulse <= 0;
         case(state)
             LISTEN: begin
                 if (bouncy_signal != signal_lvl) begin
-                    hold_cnt   <= 0;
                     signal_lvl <= ~signal_lvl;
-                    // Only pulse clean signal for 1 cycle
-                    // TODO: maybe change the name its a bit misleading
-                    if (bouncy_signal) clean_signal <= 1;
+                    hold_cnt   <= 0;
                     state      <= HOLD;
+                    if (bouncy_signal)
+                        clean_pulse <= 1;
                 end
             end
             HOLD: begin
                 hold_cnt <= hold_cnt + 1;
-                if (hold_cnt == 16'hFFFF) begin
+                if (hold_cnt == 8'hFF) begin
                     state <= LISTEN;
                 end
             end
@@ -45,5 +44,7 @@ module debouncer (
             end
         endcase
     end
+    
+    assign clean_signal = clean_pulse;
 
 endmodule

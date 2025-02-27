@@ -25,9 +25,9 @@ module tx(
             IDLE: begin
                 tx_line <= 1;
                 if (send) begin
+                    tx_line      <= 0;
                     baud_gen_clk <= 0;
                     bit_cnt      <= 0;
-                    tx_line      <= 0;
                     data_sr      <= data;
                     state        <= SEND;
                 end
