@@ -4,6 +4,34 @@
 set_property -dict { PACKAGE_PIN L17   IOSTANDARD LVCMOS33 } [get_ports { clk }]; #IO_L12P_T1_MRCC_14 Sch=GCLK
 create_clock -add -name sys_clk_pin -period 83.33 -waveform {0 41.66} [get_ports {clk}];
 
+set_input_delay -max 5 [get_ports btn] -clock clk
+set_input_delay -min 1 [get_ports btn] -clock clk
+
+set_input_delay -max 5 [get_ports rx_line] -clock clk
+set_input_delay -min 1 [get_ports rx_line] -clock clk
+
+set_output_delay -max 4 [get_ports tx_line] -clock clk
+set_output_delay -min 0 [get_ports tx_line] -clock clk
+
+set_property DRIVE 8 [get_ports tx_line]
+set_property SLEW FAST [get_ports tx_line]
+
+# set_false_path -from [get_ports debug_signal]
+
+# set_multicycle_path 2 -setup -from [get_registers slow_signal_reg]
+# set_multicycle_path 1 -hold -from [get_registers slow_signal_reg]
+
+# set_max_delay 1 -from [get_ports rx_line] -to [get_ports clk]
+# set_min_delay 0.5 -from [get_ports rx_line] -to [get_ports clk]
+
+# set_property LOC DSP48E2_X0Y0 [get_cells my_dsp]
+# set_property LOC RAMB18_X1Y2 [get_cells my_bram]
+
+# set_property DONT_TOUCH true [get_cells debug_signal]
+# set_property MARK_DEBUG true [get_ports debug_signal]
+
+
+
 # LEDs
 #set_property -dict { PACKAGE_PIN A17   IOSTANDARD LVCMOS33 } [get_ports { led[0] }]; #IO_L12N_T1_MRCC_16 Sch=LED1
 #set_property -dict { PACKAGE_PIN C16   IOSTANDARD LVCMOS33 } [get_ports { led[1] }]; #IO_L13P_T2_MRCC_16 Sch=LED2
@@ -14,7 +42,7 @@ create_clock -add -name sys_clk_pin -period 83.33 -waveform {0 41.66} [get_ports
 #set_property -dict { PACKAGE_PIN C17   IOSTANDARD LVCMOS33 } [get_ports { led_r }]; #IO_L14P_T2_SRCC_16 Sch=LED0_R
 
 # Buttons
-#set_property -dict { PACKAGE_PIN A18   IOSTANDARD LVCMOS33 } [get_ports { rst }]; #IO_L19N_T3_VREF_16 Sch=BTN0
+set_property -dict { PACKAGE_PIN A18   IOSTANDARD LVCMOS33 } [get_ports { btn }]; #IO_L19N_T3_VREF_16 Sch=BTN0
 #set_property -dict { PACKAGE_PIN B18   IOSTANDARD LVCMOS33 } [get_ports {  }]; #IO_L19P_T3_16 Sch=BTN1
 
 ## Pmod Header JA
