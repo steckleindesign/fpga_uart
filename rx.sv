@@ -21,6 +21,12 @@ module rx(
     state_t state;
     
     always_ff @(posedge clk) begin
+        valid <= 0;
+        baud_rate_cnt <= baud_rate_cnt;
+        bit_cnt <= bit_cnt;
+        state <= state;
+        data_sr <= data_sr;
+        data <= data;
         case(state)
             IDLE: begin
                 valid <= 0;
