@@ -15,6 +15,7 @@ module reg_block(
     logic [7:0] internal_reg;
     
     always_ff @(posedge clk) begin
+        internal_reg <= internal_reg;
         // Handshake CDC
         handshake_ff0 <= wr_req;
         handshake_ff1 <= handshake_ff0;

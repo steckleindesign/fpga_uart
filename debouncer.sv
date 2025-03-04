@@ -12,7 +12,7 @@ module debouncer (
 
     logic        clean_pulse;
     logic        signal_lvl;
-    logic [10:0] hold_cnt;
+    logic [11:0] hold_cnt;
 
     typedef enum logic [0:0] {
         LISTEN, HOLD
@@ -21,6 +21,9 @@ module debouncer (
     
     always_ff @(posedge clk) begin
         clean_pulse <= 0;
+        signal_lvl  <= signal_lvl;
+        hold_cnt    <= hold_cnt;
+        state       <= state;
         case(state)
             LISTEN: begin
                 if (bouncy_signal != signal_lvl) begin
@@ -33,7 +36,7 @@ module debouncer (
             end
             HOLD: begin
                 hold_cnt <= hold_cnt + 1;
-                if (hold_cnt == 8'hFF) begin
+                if (hold_cnt == 12'hFFF) begin
                     state <= LISTEN;
                 end
             end

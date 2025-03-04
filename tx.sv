@@ -21,9 +21,13 @@ module tx(
     state_t state;
     
     always_ff @(posedge clk) begin
+        tx_line      <= 1;
+        baud_gen_clk <= baud_gen_clk;
+        bit_cnt      <= bit_cnt;
+        data_sr      <= data_sr;
+        state        <= state;
         case(state)
             IDLE: begin
-                tx_line <= 1;
                 if (send) begin
                     tx_line      <= 0;
                     baud_gen_clk <= 0;
@@ -43,7 +47,6 @@ module tx(
                 end
             end
             default: begin
-                tx_line <= 1;
                 state   <= IDLE;
             end
         endcase
